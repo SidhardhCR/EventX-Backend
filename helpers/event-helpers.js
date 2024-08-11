@@ -12,5 +12,11 @@ module.exports={
                 resolve(response.insertedId.toString())
             })
         }))
+    },
+    get_events:()=>{
+        return (new promise(async(resolve,reject)=>{
+           let events = await db.get().collection(collection.Collecton_Events).find().toArray();
+           resolve(events)
+        }))
     }
 }
