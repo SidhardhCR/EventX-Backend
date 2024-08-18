@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var path = require('path')
+var db = require('../../config/db_connection')
 
 var event_helpers = require('../../helpers/event-helpers');
 
@@ -37,10 +38,20 @@ router.get('/images/:filename', (req, res) => {
 
 router.get('/events', (req, res) => {
 
-    event_helpers.get_events().then((events) => {
-        console.log(events)
-        res.status(200).json({ events: events })
-    })
+    db.connect((err) => {
+        if (err) {
+          console.log("Database connection Error")
+        }
+        else {
+          console.log("Database Connected successfully")
+          event_helpers.get_events().then((events) => {
+            console.log(events)
+            res.status(200).json({ events: events })
+        })
+        }
+      })
+
+    
 
 })
 

@@ -1,9 +1,19 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport')
+var db = require('../config/db_connection')
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
+  
+db.connect((err) => {
+  if (err) {
+    console.log("Database connection Error")
+  }
+  else {
+    console.log("Database Connected successfully")
+  }
+})
   res.render('index', { title: 'Express' });
 });
 
