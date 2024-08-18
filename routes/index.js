@@ -14,7 +14,7 @@ router.get('/sample', (req, res) => {
 router.get('/auth/google', passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get('/auth/google/callback', passport.authenticate("google", {
-  successRedirect: 'https://event-x-frontend.vercel.app/',
+  successRedirect: 'https://event-x-frontend.vercel.app',
   failureRedirect: 'https://event-x-frontend.vercel.app/login'
 }));
 
