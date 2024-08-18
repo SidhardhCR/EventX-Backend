@@ -25,7 +25,7 @@ router.get('/images/:filename', (req, res) => {
 
     const filename = req.params.filename;
     const filePath = path.join(__dirname, '../../public/event-images', filename);
-  
+
     console.log(filePath)
 
     res.sendFile(filePath, (err) => {
@@ -35,13 +35,13 @@ router.get('/images/:filename', (req, res) => {
     })
 });
 
-router.get('/events',(req,res)=>{
+router.get('/events', (req, res) => {
 
-    event_helpers.get_events().then((events)=>{
+    event_helpers.get_events().then((events) => {
         console.log(events)
-        res.status(200).json({events:events})
+        res.status(200).json({ events: events })
     })
-    
+
 })
 
 
