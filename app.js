@@ -67,22 +67,32 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       console.log("profile", profile)
       try {
-        let user = await db.get().collection(collections.Collection_User).findOne({ googleId: profile.id });
-
-        if (!user) {
-          let user = {
-            googleId: profile.id,
-            displayName: profile.displayName,
-            email: profile.emails[0].value,
-            image: profile.photos[0].value
+        db.connect(async (err) => {
+          if (err) {
+            console.log("Database connection Error")
           }
-          db.get().collection(collections.Collection_User).insertOne(user).then((response) => {
-            console.log(response)
-          })
-          return done(null, user)
-        } else {
-          return done(null, user)
-        }
+          else {
+            console.log("Database Connected successfully")
+            let user = await db.get().collection(collections.Collection_User).findOne({ googleId: profile.id });
+
+            if (!user) {
+              let user = {
+                googleId: profile.id,
+                displayName: profile.displayName,
+                email: profile.emails[0].value,
+                image: profile.photos[0].value
+              }
+              db.get().collection(collections.Collection_User).insertOne(user).then((response) => {
+                console.log(response)
+              })
+              return done(null, user)
+            } else {
+              return done(null, user)
+            }
+          }
+        })
+
+
       } catch (err) {
         return done(err, null)
       }
