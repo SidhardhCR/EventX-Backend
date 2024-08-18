@@ -9,8 +9,7 @@ module.exports.connect = function (done) {
     const dbname = 'EventX';
 
     MongoClient.connect(url, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+        
         connectTimeoutMS: 30000, // Increase timeout to 30 seconds
         socketTimeoutMS: 45000   // Increase socket timeout to 45 seconds
     })
