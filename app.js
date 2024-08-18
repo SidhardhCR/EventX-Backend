@@ -11,8 +11,9 @@ var db = require('./config/db_connection');
 var collections = require('./config/db_collections');
 const cors = require('cors');
 const fileUpload = require('express-fileupload')
-const clientid = "874119014924-23n758i5rq0fs7n3lihbinf3o9i0ulbc.apps.googleusercontent.com";
-const clientsecret = "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";
+require('dotenv').config();
+const clientid = process.env.clientid;
+const clientsecret = process.env.clientsecret;
 
 const session = require('express-session');
 const passport = require('passport');
