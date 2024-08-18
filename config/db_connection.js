@@ -5,7 +5,7 @@ const state = {
 };
 
 module.exports.connect = function (done) {
-    const url = 'mongodb+srv://sidhardhcr007:Mongo%40526626@database.4tqro37.mongodb.net/';
+    const url = 'mongodb+srv://sidhardhcr007:Mongo@526626@database.4tqro37.mongodb.net/?retryWrites=true&w=majority&appName=DataBase';
     const dbname = 'EventX';
 
     MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
