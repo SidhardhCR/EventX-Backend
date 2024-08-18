@@ -1,24 +1,28 @@
-const mongoClient = require('mongodb').MongoClient
+const { MongoClient } = require('mongodb');
 
 const state = {
-    db
-}
-
+    db: null // Initialize 'db' as null
+};
 
 module.exports.connect = function (done) {
-    const url = 'mongodb+srv://sidhardhcr007:Mongo%40526626@database.4tqro37.mongodb.net/'
-    const dbname = 'EventX'
+    const url = 'mongodb+srv://sidhardhcr007:Mongo%40526626@database.4tqro37.mongodb.net/';
+    const dbname = 'EventX';
 
-    mongoClient.connect(url).then((client) => {
-        state.db = client.db(dbname)
-        console.log(state.db)
-        done()
-    }).catch((err) => {
-        console.log(err)
-        return done(err)
-    })
-}
+    MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+        .then((client) => {
+            state.db = client.db(dbname);
+            console.log('Database connection established:', state.db);
+            done();
+        })
+        .catch((err) => {
+            console.error('Database connection failed:', err);
+            done(err);
+        });
+};
 
 module.exports.get = function () {
-    return state.db
-}
+    if (!state.db) {
+        throw new Error('Database not connected');
+    }
+    return state.db;
+};
