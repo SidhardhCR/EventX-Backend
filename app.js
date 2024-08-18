@@ -21,6 +21,15 @@ const OAuth2Stratergy = require('passport-google-oauth2').Strategy
 
 var app = express();
 
+db.connect((err) => {
+  if (err) {
+    console.log("Database connection Error")
+  }
+  else {
+    console.log("Database Connected successfully")
+  }
+})
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -89,14 +98,7 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 })
 
-db.connect((err) => {
-  if (err) {
-    console.log("Database connection Error")
-  }
-  else {
-    console.log("Database Connected successfully")
-  }
-})
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
