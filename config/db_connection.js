@@ -11,23 +11,24 @@ module.exports.connect = function (done) {
     const dbname = 'EventX';
 
     MongoClient.connect(url, {
-        connectTimeoutMS: 30000, // Increase timeout to 30 seconds
-        socketTimeoutMS: 45000   // Increase socket timeout to 45 seconds
+        connectTimeoutMS: 60000, // Increase timeout to 60 seconds
+        socketTimeoutMS: 60000,  // Increase socket timeout to 60 seconds
+        serverSelectionTimeoutMS: 60000   // Increase socket timeout to 45 seconds
     })
-    .then((client) => {
-        state.db = client.db(dbname);
-        console.log('Database connection established');
+        .then((client) => {
+            state.db = client.db(dbname);
+            console.log('Database connection established');
 
-        // Initialize GridFS
-        state.gfs = Grid(state.db, MongoClient);
-        state.gfs.collection('uploads');
+            // Initialize GridFS
+            state.gfs = Grid(state.db, MongoClient);
+            state.gfs.collection('uploads');
 
-        done();
-    })
-    .catch((err) => {
-        console.error('Database connection failed:', err);
-        done(err);
-    });
+            done();
+        })
+        .catch((err) => {
+            console.error('Database connection failed:', err);
+            done(err);
+        });
 };
 
 module.exports.get = function () {
