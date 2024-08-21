@@ -11,31 +11,47 @@ router.get('/user', (req, res) => {
 });
 
 router.post('/event_submit', (req, res) => {
-    console.log(req.body)
-    console.log(req.files.file)
-    event_helpers.create_event(req.body).then((id) => {
-        let image = req.files.file
-        image.mv('../../public/event-images/' + id + '.jpg')
-        console.log('added successfully')
-        res.status(200).json({ message: 'success' })
-    })
+    console.log(req.body);
+    console.log(req.files.file);
 
+    event_helpers.create_event(req.body).then((id) => {
+        let image = req.files.file;
+        const gfs = db.getGFS(); // Get GridFS instance
+
+        const writeStream = gfs.createWriteStream({
+            filename: id + '.jpg',
+            content_type: image.mimetype,
+            metadata: { event_id: id }
+        });
+
+        writeStream.write(image.data);
+        writeStream.end();
+
+        writeStream.on('close', (file) => {
+            console.log('Image stored successfully in GridFS');
+            res.status(200).json({ message: 'success', file_id: file._id });
+        });
+
+        writeStream.on('error', (err) => {
+            console.error('Error storing image in GridFS:', err);
+            res.status(500).json({ error: 'Failed to store image' });
+        });
+    });
 });
 
 router.get('/images/:filename', (req, res) => {
-
     const filename = req.params.filename;
-    const filePath = path.join(__dirname, '../../public/event-images', filename);
+    const gfs = db.getGFS(); // Get GridFS instance
 
-    console.log(filePath)
-
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            res.status(404).send('Image not found');
+    gfs.files.findOne({ filename: filename }, (err, file) => {
+        if (!file || file.length === 0) {
+            return res.status(404).send('Image not found');
         }
-    })
-});
 
+        const readStream = gfs.createReadStream({ filename: file.filename });
+        readStream.pipe(res);
+    });
+});
 router.get('/events', (req, res) => {
 
     db.connect((err) => {

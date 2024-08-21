@@ -1,7 +1,9 @@
 const { MongoClient } = require('mongodb');
+const Grid = require('gridfs-stream');
 
 const state = {
-    db: null
+    db: null,
+    gfs: null  // Add a GridFS stream reference
 };
 
 module.exports.connect = function (done) {
@@ -9,13 +11,17 @@ module.exports.connect = function (done) {
     const dbname = 'EventX';
 
     MongoClient.connect(url, {
-        
         connectTimeoutMS: 30000, // Increase timeout to 30 seconds
         socketTimeoutMS: 45000   // Increase socket timeout to 45 seconds
     })
     .then((client) => {
         state.db = client.db(dbname);
         console.log('Database connection established');
+
+        // Initialize GridFS
+        state.gfs = Grid(state.db, MongoClient);
+        state.gfs.collection('uploads');
+
         done();
     })
     .catch((err) => {
@@ -29,4 +35,12 @@ module.exports.get = function () {
         throw new Error('Database not connected');
     }
     return state.db;
+};
+
+// Get GridFS instance
+module.exports.getGFS = function () {
+    if (!state.gfs) {
+        throw new Error('GridFS not initialized');
+    }
+    return state.gfs;
 };
