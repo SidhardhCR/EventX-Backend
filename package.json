@@ -15,6 +15,7 @@
     "express": "^4.19.2",
     "express-fileupload": "^1.5.1",
     "express-session": "^1.18.0",
+    "gridfs-stream": "^1.1.1",
     "hbs": "^4.2.0",
     "http-errors": "~1.6.3",
     "mongodb": "^6.8.0",
